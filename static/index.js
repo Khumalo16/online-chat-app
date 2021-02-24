@@ -50,16 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('connect', () => {
             document.querySelectorAll('button').forEach(button => {
                 button.onclick = ()=> {
-                    socket.emit('message sent');
+                    var msg = document.getElementById('text').value;
+                    socket.emit('message sent', {'msg': msg});
                 };
             })
            
         });
 
-        socket.on('message back', () => {
+        socket.on('message back', data => {
       
         const li = document.createElement('li');
-        li.innerHTML = document.getElementById('text').value;
+        li.innerHTML = data.msg;
         document.getElementById('all').append(li);
           
         });

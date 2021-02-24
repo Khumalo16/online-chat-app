@@ -39,9 +39,9 @@ def username(data):
     emit("username", {"user": data["user"]}, broadcast=True)
 
 @socketio.on("message sent")
-def message():
+def message(data):
     print("the message was received...")
-    emit("message back", broadcast=True)
+    emit("message back",{"msg": data["msg"]}, broadcast=True)
 
 if __name__ == '__main__':
     socketio.run(app)
