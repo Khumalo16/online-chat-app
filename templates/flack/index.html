@@ -7,7 +7,7 @@
 <script src="{{ url_for('static', filename='index.js') }}"></script>
 
 <style>
-   #username {
+   #usernames {
       display: none;
     }
 </style>
@@ -18,17 +18,33 @@
     <body>
 
       <section id="container">
+        <div class="channels">
+          <ul id="addchannel">
+            <li> <a href="" id="channel" data-channel="create"> Create channel</a>
+              <div id="all" class="create">
+                <input type="text" id="nameChannel" placeholder="Inter name of the the channel">
+                <button id="channelsub">Create</button>
+              </div>
+            </li>
+  
+              <li> <a href="" id="channel" data-channel="general"> General</a>
+                <ul id="all" class="general"> 
+                </ul>
+              </li>
 
-        <ul id="all">
-        </ul>
-        <hr>
-
-       <input type="text" id="text">
-       <button id="button">Send</button>
-        <hr>
-        <a href="" id="registration" data-registration="registration"> click here</a>
-
-        </section>
+              <li> <a href="" id="channel" data-channel="news"> News</a>
+                <ul id="all" class="news"> 
+                </ul>
+              </li>
+          </ul>
+          <ul class="add">
+        </div>
+        <div id="div">
+         <input type="text" id="text">
+         <button id="button">Send</button>
+        
+        </div>
+      </section>
       
 
 </body>

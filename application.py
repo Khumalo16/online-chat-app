@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = 'mysecret'
 socketio = SocketIO(app)
 users = []
+channel = []
+
 @app.route("/")
 def index():
     return render_template('flack/index.html')
@@ -24,7 +26,7 @@ def username(data):
         data["user"] = data["user"].capitalize()
     if not users and data["user"]:
         
-        users.append(data['user'])
+        users.append(data['Home'])
     if len(users) > 0:
       
         for user in users:
@@ -43,5 +45,11 @@ def message(data):
     print("the message was received...")
     emit("message back",{"msg": data["msg"]}, broadcast=True)
 
+@socketio.on("channel name")
+def createChannel(data):
+    channel.append(data["li"])
+    emit("channel name", {"li":data["li"]}, broadcast=True)
+
 if __name__ == '__main__':
     socketio.run(app)
+

@@ -1,0 +1,12 @@
+body {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+body #container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+/*# sourceMappingURL=styles.css.map */

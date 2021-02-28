@@ -1,5 +1,4 @@
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
 
    //localStorage.clear();
 
@@ -26,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem("username", data.user);    
         });
 
+      
         load_page("");
         function refresh() {    
             setTimeout(function () {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
        refresh();
    }
-
+    
     function load_page(name) {
         const request = new XMLHttpRequest();
         request.open('GET',`/${name}`);
@@ -45,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
         request.send();
     }
 
-    function message() {
+    function message(channel) {
         var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
         socket.on('connect', () => {
-            document.querySelectorAll('button').forEach(button => {
+            document.querySelectorAll('#button').forEach(button => {
                 button.onclick = ()=> {
                     var msg = document.getElementById('text').value;
                     socket.emit('message sent', {'msg': msg});
@@ -60,13 +60,84 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('message back', data => {
       
         const li = document.createElement('li');
+       
         li.innerHTML = data.msg;
-        document.getElementById('all').append(li);
+        document.querySelector(`.${channel}`).append(li);
           
         });
     }   
     
-    message();
+    message(localStorage.getItem('channelClicked'));
+
+    function showChannel(channel) {
+       
+      if (document.querySelector(`.${channel}`).style.display === 'block') {
+        document.querySelector(`.${channel}`).style.display = 'block';
+
+      }  else {
+        document.querySelector(`.${channel}`).style.display = 'block';
+
+      }
+       
+    }
+
+    document.querySelectorAll('#channel').forEach(channel => {
+        document.querySelectorAll('#all').forEach(all => {
+            all.style.display = 'none';
+          });
+        channel.onclick = function() {
+            localStorage.setItem('channelClicked',this.dataset.channel);
+            showChannel(this.dataset.channel);
+          
+            return false;
+        } ;
+      });
+   
+       
+      if (document.querySelector('.all').style.display === 'block') {
+        document.querySelector(`.${channel}`).style.display = 'block';
+
+      }  else {
+        document.querySelector(`.${channel}`).style.display = 'block';
+
+      }
+      function create() {
+         
+          var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+          socket.on('connect', () => {
+            document.getElementById('channelsub').onclick = function() {
+                var c = document.getElementById('nameChannel').value;
+
+                socket.emit('channel name', {'li': c});
+            }
+            
+          });
+  
+          socket.on('channel name', data => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            const ul = document.createElement('ul');
+    
+            a.href = "";
+            a.id = "all";
+            a.dataset.channel = data.li;
+            a.innerHTML = data.li;
+    
+            ul.id = "channel";
+            ul.className = data.li;
+           
+            li.insertAdjacentElement('afterbegin',a);
+            li.insertAdjacentElement('afterend',ul);
+            document.querySelector('#addchannel').append(li);
+            document.querySelector('.create').style.display= 'none';
+
+          });
+
+
+    }
+
+    create();
+          
 });
 
 
