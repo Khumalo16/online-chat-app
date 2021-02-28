@@ -1,3 +1,5 @@
+const allchannels = localStorage.getItem('rooms');
+let rooms; 
 document.addEventListener('DOMContentLoaded', function() {
 
    //localStorage.clear();
@@ -71,36 +73,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showChannel(channel) {
        
-      if (document.querySelector(`.${channel}`).style.display === 'block') {
+      if (document.querySelector(`.${channel}`).style.display === 'none') {
         document.querySelector(`.${channel}`).style.display = 'block';
 
       }  else {
-        document.querySelector(`.${channel}`).style.display = 'block';
+        document.querySelector(`.${channel}`).style.display = 'none';
 
       }
        
     }
 
     document.querySelectorAll('#channel').forEach(channel => {
-        document.querySelectorAll('#all').forEach(all => {
-            all.style.display = 'none';
-          });
+      
         channel.onclick = function() {
             localStorage.setItem('channelClicked',this.dataset.channel);
             showChannel(this.dataset.channel);
-          
-            return false;
+
         } ;
       });
    
        
-      if (document.querySelector('.all').style.display === 'block') {
-        document.querySelector(`.${channel}`).style.display = 'block';
-
-      }  else {
-        document.querySelector(`.${channel}`).style.display = 'block';
-
-      }
+     
       function create() {
          
           var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -128,7 +121,17 @@ document.addEventListener('DOMContentLoaded', function() {
            
             li.insertAdjacentElement('afterbegin',a);
             li.insertAdjacentElement('afterend',ul);
-            document.querySelector('#addchannel').append(li);
+            localStorage.setItem(`${data.li}`,li);
+            
+            if ( allchannels === null) {
+                rooms = [];
+            } else {
+                rooms = JSON.parse(allchannels);
+            }
+            rooms.push(li);
+            console.log(rooms);
+            localStorage.setItem('rooms', JSON.stringify(rooms))
+            document.getElementById('addchannel').append(li);
             document.querySelector('.create').style.display= 'none';
 
           });
