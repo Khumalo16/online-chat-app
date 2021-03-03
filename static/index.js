@@ -1,8 +1,10 @@
-const allchannels = localStorage.getItem('rooms');
-let rooms; 
+const allChannel = localStorage.getItem('names');
+let names;
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
-   //localStorage.clear();
+  //localStorage.clear();
 
 
     if (localStorage.getItem("username") === null) {
@@ -56,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     socket.emit('message sent', {'msg': msg});
                 };
             })
-           
         });
 
         socket.on('message back', data => {
@@ -73,22 +74,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showChannel(channel) {
        
-      if (document.querySelector(`.${channel}`).style.display === 'none') {
-        document.querySelector(`.${channel}`).style.display = 'block';
+      if (document.querySelector(`.${channel}`).style.display === 'block') {
+        document.querySelector(`.${channel}`).style.display = 'none';
 
       }  else {
-        document.querySelector(`.${channel}`).style.display = 'none';
+        document.querySelector(`.${channel}`).style.display = 'block';
 
       }
        
     }
 
     document.querySelectorAll('#channel').forEach(channel => {
-      
+        document.querySelectorAll('#all').forEach(all => {
+            all.style.display = 'none';
+          });
         channel.onclick = function() {
             localStorage.setItem('channelClicked',this.dataset.channel);
             showChannel(this.dataset.channel);
-
+          
+        //    return false;
         } ;
       });
    
@@ -107,40 +111,68 @@ document.addEventListener('DOMContentLoaded', function() {
           });
   
           socket.on('channel name', data => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            const ul = document.createElement('ul');
-    
-            a.href = "";
-            a.id = "all";
-            a.dataset.channel = data.li;
-            a.innerHTML = data.li;
-    
-            ul.id = "channel";
-            ul.className = data.li;
-           
-            li.insertAdjacentElement('afterbegin',a);
-            li.insertAdjacentElement('afterend',ul);
-            localStorage.setItem(`${data.li}`,li);
+ 
             
-            if ( allchannels === null) {
-                rooms = [];
+            if (allChannel === null) {
+                names = [];
             } else {
-                rooms = JSON.parse(allchannels);
+                names = JSON.parse(allChannel);
             }
-            rooms.push(li);
-            console.log(rooms);
-            localStorage.setItem('rooms', JSON.stringify(rooms))
-            document.getElementById('addchannel').append(li);
+            
+            names.push(data.li);
+            localStorage.setItem('names', JSON.stringify(names));
+            console.log(localStorage.getItem('names'))
+            
+            let li = document.createElement('li');
+                let a = document.createElement('a');
+                let ul = document.createElement('ul');
+                a.href = "";
+                a.id = "all";
+                a.dataset.channel = data.li;
+                a.innerHTML = data.li;
+        
+                ul.id = "channel";
+                ul.className = data.li;
+            
+                li.append(a);
+                li.append(ul);
+                document.getElementById('addchannel').append(li);
             document.querySelector('.create').style.display= 'none';
 
           });
+    }
+
+    function showAllChannels() {
+
+            names = JSON.parse(allChannel);
 
 
+            for ( var i = 0; i < names.length; i++) {
+            
+                let li = document.createElement('li');
+                let a = document.createElement('a');
+                let ul = document.createElement('ul');
+                a.href = "";
+                a.id = "all";
+                a.dataset.channel = names[i];
+                a.innerHTML = names[i];
+        
+                ul.id = "channel";
+                ul.className = names[i];
+            
+                li.append(a);
+                li.append(ul);
+                document.getElementById('addchannel').append(li);
+                console.log(i, names[i]);
+            }
+    
+            
     }
 
     create();
-          
+
+    showAllChannels();
+
 });
 
 
