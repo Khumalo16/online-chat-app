@@ -5,11 +5,13 @@ let names;
 document.addEventListener('DOMContentLoaded', function() {
 
   //localStorage.clear();
+   
 
+       showAllChannels();
 
     if (localStorage.getItem("username") === null) {
         //...
-        load_page(registration.dataset.registration);
+        load_page("registration");
         document.addEventListener('click', e => {
                 if(e.target && e.target.id == 'btn-primary') {
                     const user = document.querySelector('.form-control').value;
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
         });
     } 
-   
+ 
    if (localStorage.getItem('user') != null && localStorage.getItem('username') === null) {
         var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
         socket.on('connect', () => {
@@ -38,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
        refresh();
    }
-    
     function load_page(name) {
         const request = new XMLHttpRequest();
         request.open('GET',`/${name}`);
@@ -49,6 +50,29 @@ document.addEventListener('DOMContentLoaded', function() {
         request.send();
     }
 
+      function load_sms(channel, name) {
+        const request = new XMLHttpRequest();
+        request.open('GET',`/${name}`);
+        request.onload = () => {
+            const response = request.responseText;
+            document.getElementById('container').innerHTML= response;
+            let indivisual = localStorage.getItem(`${channel}`);
+            names = JSON.parse(indivisual);
+
+            showAllChannels();
+
+            for ( var i = 0; i < indivisual.length; i++) {
+            
+                let li = document.createElement('li');
+                li.innerHTML= indivisual[i];
+                document.getElementById('sms').append(li);
+            }
+    
+
+        };
+        request.send();
+    }
+    
     function message(channel) {
         var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
         socket.on('connect', () => {
@@ -66,6 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
        
         li.innerHTML = data.msg;
         document.querySelector(`.${channel}`).append(li);
+        const singSMS = localStorage.getItem(`${channel}`);
+        let sms;
+        if (singSMS === null) {
+            sms = [];
+        } else {
+            sms = JSON.parse(singSMS);
+        }
+            
+            sms.push(data.msg);
+            localStorage.setItem(`${channel}`, JSON.stringify(sms));
           
         });
     }   
@@ -86,13 +120,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('#channel').forEach(channel => {
         document.querySelectorAll('#all').forEach(all => {
-            all.style.display = 'none';
+          //  all.style.display = 'none';
           });
         channel.onclick = function() {
             localStorage.setItem('channelClicked',this.dataset.channel);
-            showChannel(this.dataset.channel);
+       // showChannel(this.dataset.channel);
           
-        //    return false;
+         //   load_sms(this.dataset.channel, "");
+           // return false;
         } ;
       });
    
@@ -104,15 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
           socket.on('connect', () => {
             document.getElementById('channelsub').onclick = function() {
                 var c = document.getElementById('nameChannel').value;
-
+                var f = JSON.parse(allChannel);
                 socket.emit('channel name', {'li': c});
             }
             
           });
   
           socket.on('channel name', data => {
- 
-            
+
             if (allChannel === null) {
                 names = [];
             } else {
@@ -127,17 +161,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 let a = document.createElement('a');
                 let ul = document.createElement('ul');
                 a.href = "";
-                a.id = "all";
+                ul.id = "channel"
                 a.dataset.channel = data.li;
                 a.innerHTML = data.li;
         
-                ul.id = "channel";
+                ul.id = "all"
                 ul.className = data.li;
             
                 li.append(a);
-                li.append(ul);
-                document.getElementById('addchannel').append(li);
-            document.querySelector('.create').style.display= 'none';
+                document.getElementById('addChannelMsg').append(ul);
+                document.getElementById('addChannel').append(li);
+                document.querySelector('.create').style.display= 'none';
 
           });
     }
@@ -146,33 +180,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
             names = JSON.parse(allChannel);
 
-
-            for ( var i = 0; i < names.length; i++) {
+            if (names != null) {
+                   for ( var i = 0; i < names.length; i++) {
             
                 let li = document.createElement('li');
                 let a = document.createElement('a');
                 let ul = document.createElement('ul');
                 a.href = "";
-                a.id = "all";
+                ul.id = "channel";
+                a.id = "channel";
                 a.dataset.channel = names[i];
                 a.innerHTML = names[i];
         
-                ul.id = "channel";
+                ul.id = "all"
                 ul.className = names[i];
             
                 li.append(a);
                 li.append(ul);
-                document.getElementById('addchannel').append(li);
-                console.log(i, names[i]);
+                document.getElementById('addChannel').append(li);
+            } 
             }
+        
     
             
     }
 
     create();
+    load_sms(localStorage.getItem('channelClicked'), "");
+    let i = localStorage.getItem('1');
+    if (i === null) {
+        localStorage.setItem('1',1);
+    } else {
+        i = 1 + i;
+        localStorage.setItem('1',i);
+    }
+    console.log(i);
 
-    showAllChannels();
+    
 
 });
-
-

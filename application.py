@@ -18,6 +18,10 @@ def index():
 def registration():
     return render_template('flack/registration.html')
 
+@app.route("/<string:message>")
+def showMessage(message):
+    return render_template('flack/index.html', channel=channel)
+
 @socketio.on("username")
 def username(data):
 
@@ -47,7 +51,6 @@ def message(data):
 
 @socketio.on("channel name")
 def createChannel(data):
-    channel.append(data["li"])
     emit("channel name", {"li":data["li"]}, broadcast=True)
 
 if __name__ == '__main__':
