@@ -1,0 +1,12 @@
+Author: 
+
+TODO: Complete the loader and parallelise bank.c
+
+General format for running program:
+
+./my_executable <thread_count> <datafile.txt> {<datafile.txt>}
+
+<thread_count>	- The number of threads to generate. Should be equal to the number of files provided.
+
+<datafile.txt> 	- A file of transactions to be processed. Up to 10 of these can be provided.
+

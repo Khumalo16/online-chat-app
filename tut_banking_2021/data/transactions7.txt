@@ -1,0 +1,29 @@
+deposit 7 9929 
+deposit 4 937 
+deposit 5 941 
+deposit 0 7
+deposit 3 29
+deposit 7 9 
+deposit 9 129 
+transfer 3 7 29
+transfer 7 6 31
+transfer 7 5 137
+transfer 7 4 3
+transfer 7 4 5
+withdrawal 4 1167 
+withdrawal 5 1307 
+transfer 1 8 89
+transfer 1 9 163
+withdrawal 1 41 
+withdrawal 2 71 
+withdrawal 3 1127 
+withdrawal 6 647 
+deposit 6 1953 
+deposit 7 967 
+transfer 1 7 19
+transfer 2 7 23
+transfer 6 5 1167
+transfer 4 5 53
+withdrawal 7 1593 
+withdrawal 8 449 
+withdrawal 9 163
