@@ -1,0 +1,2 @@
+CMD ["docker", "container", "run","-d","--name=pg","5432:5432","-e","POSTGRES_PASSWORD=postgress","-e"," POSTGRES_DB=test","PGDATA=/pgdata","-v","/pgdata:/pgdata","postgres:latest"]
+

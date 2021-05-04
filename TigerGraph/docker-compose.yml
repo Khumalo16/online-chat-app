@@ -1,19 +1,50 @@
 version: '3'
 services:
+  postgres:
+    image: postgres
+    container_name: PostgreSQL
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test3
+    ports:
+      - "5432:5432"
+    volumes:
+      - .pgdata:/var/lib/postgresql/data
+
   tigergraph:
     image: docker.tigergraph.com/tigergraph:latest
-    container_name: tigergraph
-    ports: 
+    container_name: TigerGraph
+    ports:
       - "14022:22"
       - "9000:9000"
       - "14240:14240"
-    ulimits:
-      nofile:
-        soft: 1000000
-        hard: 1000000
     volumes:
-      - "/data:/home/tigergraph/mydata"
+      - tigergraph-dev:/var/lib/tigergraph/data
+      - mygraph.gsql:/docker-entrypoint-initdb.d/mygraph.gsql
+      - TigerGraph:/home/tigergraph/
       - "~/TigerGraph/name.csv:/home/tigergraph/name.csv"
       - "~/TigerGraph/friends.csv:/home/tigergraph/friends.csv"
       - "~/TigerGraph/mygraph.gsql:/home/tigergraph/mygraph.gsql"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:9000/echo || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    ulimits:
+      nofile:
+         soft: 1000000
+         hard: 1000000
+    stdin_open: true
+    tty: true
 
+  flask:
+    build: ./product
+    container_name: Flask
+    restart: always
+    ports:
+      - "5000:5000"
+volumes:
+    tigergraph-dev:
+    mygraph.gsql:
+    TigerGraph:

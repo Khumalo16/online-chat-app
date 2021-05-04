@@ -1,4 +1,4 @@
-CREATE VERTEX person (PRIMARY_ID id UINT,personid UINT, name STRING,age INT)
+CREATE VERTEX person (PRIMARY_ID id UINT, personid UINT, name STRING,age INT)
 
 CREATE UNDIRECTED EDGE friendship (FROM person, TO person, joined DATETIME)
 
